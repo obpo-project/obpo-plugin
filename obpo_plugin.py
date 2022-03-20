@@ -187,13 +187,11 @@ class OBPO(plugin_t):
         self.mark_manager: {int, set} = {}
         self.ui = UiCallback()
         self.optimizer = MBAOptimizer()
-        # self.hook = MBAHook()
 
     def init(self):
         if init_hexrays_plugin():
             self.ui.hook()
             self.optimizer.install()
-            # self.hook.hook()
             logger.info('OBPO is ready')
         else:
             logger.info('OBPO: Hex-rays is not available.')
@@ -208,9 +206,6 @@ class OBPO(plugin_t):
 
 plugin = OBPO()
 plugin.optimizer.set_plugin(plugin)
-
-
-# plugin.hook.set_plugin(plugin)
 
 
 def PLUGIN_ENTRY():
