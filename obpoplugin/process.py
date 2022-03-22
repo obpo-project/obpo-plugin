@@ -6,10 +6,25 @@ import json
 
 import requests
 
-from obpoplugin import logger
+from obpoplugin import SERVER
 from obpoplugin.idahelper import *
 
-SERVER = "http://obpo.hluwa.cn:10000"
+
+def generate_microcode(function: func_t, level=None):
+    if level is None: level = MMAT_GLBOPT1
+    hf = hexrays_failure_t()
+    mbr = mba_ranges_t()
+    mbr.ranges.push_back(range_t(function.start_ea, function.end_ea))
+    ml = mlist_t()
+    mba = gen_microcode(mbr, hf, ml, DECOMP_WARNINGS, level)
+    if not mba:
+        raise Exception("{} generate mc error:  {}".format(hex(function.start_ea) % hf.errea, hf.str))
+    mba.set_mba_flags(MBA_LOADED)
+    for i in range(mba.qty):
+        mba.get_mblock(i).build_lists(True)
+    clear_empty_blocks(mba)
+    mba.verify(True)
+    return mba
 
 
 class MBAFixup(MBAPatcher):
@@ -35,6 +50,7 @@ class MBAFixup(MBAPatcher):
             if succ.type == BLT_STOP: continue
             blk.succset._del(succ.serial)
             blk.mark_lists_dirty()
+
             for inst in visit_instructions(succ):
                 inst = minsn_t(inst)
                 blk.insert_into_block(inst, blk.tail)
@@ -67,17 +83,10 @@ def _backup_calls(mba: mba_t):
             op = self.curins.d
             if op.t != mop_f: return 0
             c_map[hash((self.curins.ea, op.f.callee))] = mop_t(op)
-            mi = mcallinfo_t()
-            mi.callee = op.f.callee
-            mi.cc = op.f.cc
-            mi.return_type = tinfo_t(BT_VOID if op.f.return_type.is_void() else BT_INT)
-            mi.return_argloc = op.f.return_argloc
-            mi.return_regs = op.f.return_regs
-            mi.retregs = op.f.retregs
-            mi.spoiled = op.f.spoiled
-            mi.flags = op.f.flags | FCI_PROP | FCI_FINAL
+            callinfo = mcallinfo_t()
+            callinfo_clear_types(op.f, callinfo)
             newop = mop_t()
-            newop._make_callinfo(mi)
+            newop._make_callinfo(callinfo)
             newop.size = op.size
             self.curins.d = newop
             self.blk.mark_lists_dirty()
@@ -106,42 +115,27 @@ def _fixup_calls(mba: mba_t, c_map):
 
     for call in v.calls:
         op = v.calls[call]
-        mi = mcallinfo_t()
-        mi.callee = op.f.callee
-        mi.cc = op.f.cc
-        mi.return_type = op.f.return_type
-        mi.flags = op.f.flags
-        mi.return_regs = op.f.return_regs
-        mi.args = op.f.args
-        mi.call_spd = op.f.call_spd
-        mi.dead_regs = op.f.dead_regs
-        mi.fti_attrs = op.f.fti_attrs
-        mi.pass_regs = op.f.pass_regs
-        mi.retregs = op.f.retregs
-        mi.return_argloc = op.f.return_argloc
-        mi.role = op.f.role
-        mi.solid_args = op.f.solid_args
-        mi.spoiled = op.f.spoiled
-        mi.stkargs_top = op.f.stkargs_top
-        mi.visible_memory = op.f.visible_memory
+        callinfo = mcallinfo_t()
+        callinfo_cpy(op.f, callinfo)
         newop = mop_t()
-        newop._make_callinfo(mi)
+        newop._make_callinfo(callinfo)
         newop.size = op.size
         call.d = newop
 
 
-def request_process(mba: mba_t, dispatchers):
-    info: idainfo = get_inf_structure()
-    mba.final_type = False
-    c_map = _backup_calls(mba)
+def prepare_request(mba, dispatchers):
+    mba.final_type = False  # bypass interr 50913
     mba_bytes = mba.serialize()
+
     func_bytes = {}
     T = []
     for r in mba.mbr.ranges:
         r: range_t
         func_bytes[int(r.start_ea)] = base64.b64encode(get_bytes(r.start_ea, r.size())).decode()
         if get_sreg(r.start_ea, str2reg("T")) == 1: T.append(r.start_ea)
-    data = json.dumps({
+
+    info: idainfo = get_inf_structure()
+    return json.dumps({
         "maturity": int(mba.maturity),
         "mba": base64.b64encode(mba_bytes).decode(),
         "dispatchers": list(dispatchers),
@@ -154,12 +148,22 @@ def request_process(mba: mba_t, dispatchers):
         "t": T
     })
 
+
+def request_process(mba: mba_t, dispatchers):
+    c_map = _backup_calls(mba)
+    data = prepare_request(mba, dispatchers)
     response = requests.post("{}/request".format(SERVER), data=data)
-    response = response.text
-    if len(response) <= 4:
-        logger.error("Sorry, error code is " + response)
+    response = response.json()
+    if "warn" in response: print(response["warn"])
+    if response["code"] != 0 or not response["data"]["mba"]:
+        hide_wait_box()
+        err = "OBPO cannot to process current function"
+        if "error" in response: err += "\n\t" + response["error"]
+        info(err)
+        print(err)
         return None
-    bs = base64.b64decode(response)
+    b64_mba = response["data"]["mba"]
+    bs = base64.b64decode(b64_mba)
     mba: mba_t = mba_t_deserialize(bs)
     _fixup_calls(mba, c_map)
     MBAFixup(mba).run()

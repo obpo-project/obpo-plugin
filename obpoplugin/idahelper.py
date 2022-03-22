@@ -150,6 +150,39 @@ def mba_cpy(dst: mba_t, src: mba_t):
     fixup_stkvar(dst)
 
 
+def callinfo_cpy(src, dest):
+    dest.callee = src.callee
+    dest.cc = src.cc
+    dest.return_type = src.return_type
+    dest.flags = src.flags
+    dest.return_regs = src.return_regs
+    dest.args = src.args
+    dest.call_spd = src.call_spd
+    dest.dead_regs = src.dead_regs
+    dest.fti_attrs = src.fti_attrs
+    dest.pass_regs = src.pass_regs
+    dest.retregs = src.retregs
+    dest.return_argloc = src.return_argloc
+    dest.role = src.role
+    dest.solid_args = src.solid_args
+    dest.spoiled = src.spoiled
+    dest.stkargs_top = src.stkargs_top
+    dest.visible_memory = src.visible_memory
+    return dest
+
+
+def callinfo_clear_types(src, dest):
+    dest.callee = src.callee
+    dest.cc = src.cc
+    dest.return_type = tinfo_t(BT_VOID if src.return_type.is_void() else BT_INT)
+    dest.return_argloc = src.return_argloc
+    dest.return_regs = src.return_regs
+    dest.retregs = src.retregs
+    dest.spoiled = src.spoiled
+    dest.flags = src.flags | FCI_PROP | FCI_FINAL
+    return dest
+
+
 def fixup_stkvar(mba):
     # fixup verify.cpp: if ( mv.mba != NULL && s->mba != mv.mba ) INTERR(50762);
     class v(mop_visitor_t):
@@ -353,3 +386,8 @@ def insert_tail(block, inst):
         tail = tail.prev
     block.insert_into_block(inst, tail)
     block.mark_lists_dirty()
+
+
+def get_func_start(ea):
+    func = get_func(ea)
+    return func.start_ea
