@@ -2,6 +2,7 @@
 # HomePage: https://github.com/hluwa
 # CreateTime: 2022/3/22
 from ida_hexrays import mba_t
+from ida_idaapi import BADADDR
 from obpoplugin.idahelper import get_func_start, get_block_start
 
 
@@ -52,6 +53,7 @@ class MbaManager:
 
     def cache(self, mba: mba_t):
         ea = mba.entry_ea
+        if ea == BADADDR: ea = mba.get_mblock(0).start
         c = self.func_cached(ea)
         c[mba.maturity] = mba
 
