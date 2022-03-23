@@ -158,7 +158,7 @@ def request_process(mba: mba_t, dispatchers):
     if response["code"] != 0 or not response["data"]["mba"]:
         hide_wait_box()
         err = "OBPO cannot to process current function"
-        if "error" in response: err += "\n\t" + response["error"]
+        if "error" in response: err += "\r\n\r\n" + response["error"]
         info(err)
         print(err)
         return None

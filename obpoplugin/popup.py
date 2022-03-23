@@ -29,11 +29,13 @@ def process(_):
         func = get_func(ea)
         mba = generate_microcode(func, level=LEVEL)
         show_wait_box("OBPO Processing...")
-        optimized = request_process(mba, mark_manager_instance().func_marked(ea))
-        hide_wait_box()
-        if not optimized: return
-        mba_manager_instance().cache(optimized)
-        logger.info("{} has been processed, please refresh decompiler".format(hex(mba.entry_ea)))
+        try:
+            optimized = request_process(mba, mark_manager_instance().func_marked(ea))
+            if not optimized: return
+            mba_manager_instance().cache(optimized)
+            logger.info("{} has been processed, please refresh decompiler".format(hex(mba.entry_ea)))
+        finally:
+            hide_wait_box()
 
 
 def revert(_):
