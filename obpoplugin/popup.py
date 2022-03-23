@@ -65,9 +65,16 @@ def unmark_all(_):
     logger.info("unmarked all dispatcher")
 
 
+def mark_and_process(_):
+    mark(_)
+    process(_)
+
+
 mark_action = 'OBPO:MARK_DISPATCH'
 unmark_action = 'OBPO:UNMARK_DISPATCH'
 unmark_all_action = 'OBPO:UNMARK_ALL_DISPATCH'
+
+mark_process_action = 'OBPO:MARK_AND_PROCESS'
 
 process_action = 'OBPO:PROCESS_FUNCTION'
 revert_action = 'OBPO:REVERT_FUNCTION'
@@ -83,6 +90,7 @@ class PopupHooks(UI_Hooks):
         register_action(action_desc_t(mark_action, 'Mark dispatcher', HandlerProxy(mark)))
         register_action(action_desc_t(unmark_action, 'Unmark dispatcher', HandlerProxy(unmark)))
         register_action(action_desc_t(unmark_all_action, 'Unmark all dispatcher', HandlerProxy(unmark_all)))
+        register_action(action_desc_t(mark_process_action, 'Mark and process function', HandlerProxy(mark_and_process)))
         register_action(action_desc_t(process_action, 'Process function', HandlerProxy(process)))
         register_action(action_desc_t(revert_action, 'Revert function', HandlerProxy(revert)))
         register_action(action_desc_t(revert_all_action, 'Revert all function', HandlerProxy(revert_all)))
@@ -92,6 +100,7 @@ class PopupHooks(UI_Hooks):
             attach_action_to_popup(widget, popup, mark_action, "OBPO/")
             attach_action_to_popup(widget, popup, unmark_action, "OBPO/")
             attach_action_to_popup(widget, popup, unmark_all_action, "OBPO/")
+            attach_action_to_popup(widget, popup, mark_process_action, "OBPO/")
             attach_action_to_popup(widget, popup, process_action, "OBPO/")
             attach_action_to_popup(widget, popup, revert_action, "OBPO/")
             attach_action_to_popup(widget, popup, revert_all_action, "OBPO/")
