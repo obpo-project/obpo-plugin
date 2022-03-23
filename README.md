@@ -9,6 +9,12 @@ Obpo is not open source yet, but currently provides obpo-plugin for testing. obp
 code of the target function will be sent to the obpo server for processing, and the response result will be applied to
 the decompilation process.
 
+### NOTE
+
+1. Obpo can't solve all obfuscate problems, but I hope it can be a powerful option.
+2. Due to the limited server performance, the timeout is limited to 60s. If there is abuse or attack behavior, I will
+   close the service at any time.
+
 ## Supported Version
 
 obpo-plugin currently requires the following versions of hex-rays decompiler:
@@ -21,3 +27,20 @@ obpo-plugin currently requires the following versions of hex-rays decompiler:
 | 7.5.0.201028     | ARM, ARM64, X86, X86_64  | ✔️   |
 | 7.5.0.201028     | PowerPC, PowerPC64, MIPS | ❌️   |
 
+## Installation
+
+Copy `obpo_plugin.py` and `obpoplugin` into ida plugins path.
+
+## Usages
+
+Obpo requires you to manually mark a dispatch block for Control Flow Flattening before automated analysis. Normally, the
+dispatch block looks like this:
+
+![](./assets/dispatchblock.png)
+
+Right-click on the control flow graph, click `OBPO -> Mark and process function`. Refresh the decompiler after
+processing is complete, like this:
+
+![](./assets/demo.gif)
+
+Depending on the decompilation changes you can continue to mark dispatch blocks.
