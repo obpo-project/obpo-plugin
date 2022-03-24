@@ -79,20 +79,32 @@ def _backup_calls(mba: mba_t):
 
     class call_visit(minsn_visitor_t):
 
+        def __init__(self, *args):
+            super().__init__(*args)
+            self.calls = []
+
         def visit_minsn(self):
             op = self.curins.d
-            if op.t != mop_f: return 0
-            c_map[hash((self.curins.ea, op.f.callee))] = mop_t(op)
-            callinfo = mcallinfo_t()
-            callinfo_clear_types(op.f, callinfo)
-            newop = mop_t()
-            newop._make_callinfo(callinfo)
-            newop.size = op.size
-            self.curins.d = newop
+            if not op or op.t != mop_f: return 0
+            self.calls.append(self.curins)
             self.blk.mark_lists_dirty()
             return 0
 
-    mba.for_all_insns(call_visit())
+    v = call_visit()
+    mba.for_all_insns(v)
+    for curins in v.calls:
+        op = curins.d
+        if not op.f: continue
+        c_map[hash((curins.ea, op.f.callee))] = mop_t(op)
+        callinfo = mcallinfo_t()
+        callinfo_clear_types(op.f, callinfo)
+        newop = mop_t()
+        # newop._make_callinfo(callinfo) # has maybe crash
+        newop.t = mop_f
+        newop.f = callinfo
+        newop.size = op.size
+        curins.d = newop
+
     return c_map
 
 
@@ -118,7 +130,9 @@ def _fixup_calls(mba: mba_t, c_map):
         callinfo = mcallinfo_t()
         callinfo_cpy(op.f, callinfo)
         newop = mop_t()
-        newop._make_callinfo(callinfo)
+        # newop._make_callinfo(callinfo) # has maybe crash
+        newop.t = mop_f
+        newop.f = callinfo
         newop.size = op.size
         call.d = newop
 

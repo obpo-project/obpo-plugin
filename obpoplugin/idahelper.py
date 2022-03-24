@@ -176,9 +176,15 @@ def callinfo_clear_types(src, dest):
     dest.cc = src.cc
     dest.return_type = tinfo_t(BT_VOID if src.return_type.is_void() else BT_INT)
     dest.return_argloc = src.return_argloc
-    dest.return_regs = src.return_regs
-    dest.retregs = src.retregs
-    dest.spoiled = src.spoiled
+    n_return_regs = mlist_t()
+    n_return_regs.add(src.return_regs)
+    dest.return_regs = n_return_regs
+    n_retregs = mopvec_t()
+    for r in src.retregs: n_retregs.push_back(r)
+    dest.retregs = n_retregs
+    n_spoiled = mlist_t()
+    n_spoiled.add(src.spoiled)
+    dest.spoiled = n_spoiled
     dest.flags = src.flags | FCI_PROP | FCI_FINAL
     return dest
 
