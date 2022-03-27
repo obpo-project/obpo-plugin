@@ -1,0 +1,198 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://highlightjs.org/static/demo/styles/github.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/cpp.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div style="width:50%; float:left;">
+<h1> original.c </h1>
+<pre><code class="cpp">
+int __fastcall sub_750(int a1, int a2)
+{
+  int v2; // r6
+  int v3; // r3
+  int v4; // r7
+  int v5; // r2
+  int v6; // r10
+  int v7; // r9
+  int v8; // r8
+  int v9; // r5
+  int result; // r0
+  int v11; // r4
+  int v12; // r1
+  int v13; // [sp+10h] [bp-20h]
+
+  v2 = 1367282131;
+  LOWORD(v3) = 16459;
+  if ( a1 < a2 )
+    v2 = 4678;
+  HIWORD(v3) = -2055;
+  if ( a1 < a2 )
+    HIWORD(v2) = -12257;
+  if ( a2 < 10 )
+    v3 = 22636;
+  LOWORD(v4) = -30231;
+  if ( a2 < 10 )
+    HIWORD(v3) = -11248;
+  LOWORD(v5) = 6923;
+  HIWORD(v4) = 30268;
+  LOWORD(v6) = 14374;
+  if ( a1 < 10 )
+    v4 = 13274;
+  LOWORD(v7) = 16458;
+  LOWORD(v8) = 22635;
+  LOWORD(v9) = 4562;
+  HIWORD(v5) = -23883;
+  if ( a1 < 10 )
+    HIWORD(v4) = -5066;
+  HIWORD(v6) = 12660;
+  HIWORD(v7) = -2055;
+  HIWORD(v8) = -11248;
+  result = dword_900 + 2028;
+  HIWORD(v9) = 20863;
+  v11 = v5;
+  v13 = v3;
+  do
+  {
+    while ( 1 )
+    {
+      while ( 1 )
+      {
+        while ( 1 )
+        {
+          v12 = v5;
+          if ( v5 > v7 )
+            break;
+          if ( v5 > v8 )
+          {
+            if ( v5 == -737126292 )
+            {
+              ((void (__fastcall *)(int))unk_694)(dword_904 + 1980);
+              result = 3;
+              v5 = v6;
+            }
+            else if ( v5 == -331992102 )
+            {
+              ((void (__fastcall *)(int))unk_694)(dword_908 + 2004);
+              result = 2;
+              v5 = v6;
+            }
+          }
+          else
+          {
+            v5 = v2;
+            if ( v12 != v11 )
+            {
+              v5 = v12;
+              if ( v12 == -803270074 )
+              {
+                ((void (__fastcall *)(int))unk_694)(dword_90C + 1956);
+                result = 1;
+                v5 = v6;
+              }
+            }
+          }
+        }
+        if ( v5 <= v9 )
+          break;
+        v5 = v4;
+        if ( v12 != 1367282131 )
+        {
+          v5 = v12;
+          if ( v12 == 1983678953 )
+            v5 = v13;
+        }
+      }
+      if ( v5 != -134660021 )
+        break;
+      ((void (__fastcall *)(int))unk_694)(dword_900 + 2028);
+      result = 4;
+      v5 = v6;
+    }
+  }
+  while ( v5 != v6 );
+  return result;
+}
+
+</code></pre>
+</div><div style="width:50%; float:left;">
+<h1> original_obpo.c </h1>
+<pre><code class="cpp">
+int __fastcall sub_750(int a1, int a2)
+{
+  int v2; // r3
+  int v3; // r6
+  int v4; // r7
+  int result; // r0
+  int v6; // r2
+  int v7; // [sp+10h] [bp-20h]
+
+  v3 = 1367282131;
+  LOWORD(v2) = 16459;
+  if ( a1 < a2 )
+    v3 = 4678;
+  HIWORD(v2) = -2055;
+  if ( a1 < a2 )
+    HIWORD(v3) = -12257;
+  if ( a2 < 10 )
+    v2 = 22636;
+  LOWORD(v4) = -30231;
+  if ( a2 < 10 )
+    HIWORD(v2) = -11248;
+  HIWORD(v4) = 30268;
+  if ( a1 < 10 )
+    v4 = 13274;
+  if ( a1 >= 10 )
+  {
+    v7 = v2;
+    if ( v3 == 1367282131 )
+    {
+      v6 = v4;
+      goto LABEL_16;
+    }
+LABEL_24:
+    ((void (__fastcall *)(int))unk_694)(dword_90C + 1956);
+    return 1;
+  }
+  HIWORD(v4) = -5066;
+  v7 = v2;
+  if ( v3 != 1367282131 )
+    goto LABEL_24;
+  v6 = v4;
+LABEL_16:
+  if ( v6 == 1983678953 )
+  {
+    if ( v7 == -134660021 )
+    {
+      ((void (__fastcall *)(int))unk_694)(dword_900 + 2028);
+      result = 4;
+    }
+    else
+    {
+      ((void (__fastcall *)(int))unk_694)(dword_904 + 1980);
+      result = 3;
+    }
+  }
+  else
+  {
+    ((void (__fastcall *)(int))unk_694)(dword_908 + 2004);
+    result = 2;
+  }
+  return result;
+}
+
+</code></pre>
+</div>
+</body>
+</html>
+
+
