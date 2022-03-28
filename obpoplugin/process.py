@@ -6,6 +6,7 @@ import json
 
 import requests
 
+from idautils import FuncItems
 from obpoplugin import SERVER
 from obpoplugin.idahelper import *
 
@@ -13,16 +14,15 @@ from obpoplugin.idahelper import *
 def generate_microcode(function: func_t, level=None):
     if level is None: level = MMAT_GLBOPT1
     hf = hexrays_failure_t()
-    mbr = mba_ranges_t()
-    mbr.ranges.push_back(range_t(function.start_ea, function.end_ea))
+    mbr = mba_ranges_t(function)
     ml = mlist_t()
     mba = gen_microcode(mbr, hf, ml, DECOMP_WARNINGS, level)
     if not mba:
         raise Exception("{} generate mc error:  {}".format(hex(function.start_ea) % hf.errea, hf.str))
-    mba.set_mba_flags(MBA_LOADED)
     for i in range(mba.qty):
         mba.get_mblock(i).build_lists(True)
     clear_empty_blocks(mba)
+    mba.set_mba_flags(MBA_LOADED)
     mba.verify(True)
     return mba
 
@@ -143,10 +143,10 @@ def prepare_request(mba, dispatchers):
 
     func_bytes = {}
     T = []
-    for r in mba.mbr.ranges:
-        r: range_t
-        func_bytes[int(r.start_ea)] = base64.b64encode(get_bytes(r.start_ea, r.size())).decode()
-        if get_sreg(r.start_ea, str2reg("T")) == 1: T.append(r.start_ea)
+    for f in map(get_fchunk, list(FuncItems(mba.entry_ea))):
+        if f.start_ea in func_bytes: continue
+        func_bytes[int(f.start_ea)] = base64.b64encode(get_bytes(f.start_ea, f.size())).decode()
+        if get_sreg(f.start_ea, str2reg("T")) == 1: T.append(f.start_ea)
 
     info: idainfo = get_inf_structure()
     return json.dumps({
