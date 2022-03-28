@@ -6,5 +6,5 @@ import logging
 from ida_hexrays import MMAT_GLBOPT1
 
 LEVEL = MMAT_GLBOPT1
-SERVER = "http://obpo.hluwa.cn:10000"
+SERVER = "https://service-0jw099zh-1256170507.sh.apigw.tencentcs.com"
 logger = logging.getLogger("OBPO_PLUGIN")
