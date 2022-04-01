@@ -1,21 +1,25 @@
 # Obfuscated Binary Pseudocode Optimizer
 
-[ENGLISH README](README_EN.md)
+[中文说明](https://mp.weixin.qq.com/s/ZA-Pt7WnEhGXlFSi5hJrcw)
 
-Obpo 是一个基于 Hex-ray Microcode 的 IDA 反编译代码优化插件， 使用了静态程序分析、数据流跟踪、混合执行等技术来重建被混淆的控制流（例如 OLLVM）
+Obpo is a microcode-based hex-rays optimizer, uses techniques such as static-program-analysis, dataflow-tracking,
+concolic-execution to rebuild the obfuscated control flow (such as: OLLVM).
 
 ## obpo-plugin
 
-Obpo 暂时还不是开源的， 现在提供 obpo-plugin 供测试使用。 obpo-plugin 是一个云插件，使用过程中会将目标函数的二进制代码发送到 obpo 的服务器进行处理，然后会将响应结果作用在反编译的过程中。
+Obpo is not open source yet, but currently provides obpo-plugin for testing. obpo-plugin is a cloud plugin, the binary
+code of the target function will be sent to the obpo server for processing, and the response result will be applied to
+the decompilation process.
 
-### 注意
+### NOTE
 
-1. Obpo 并不能解决所有的混淆问题，但个人希望它能成为一个有力的可选项。
-2. 迫于服务器性能限制，目前设置了 60 秒的处理超时。如果发现有滥用或者恶意攻击的行为，我可能会随时关闭服务器。
+1. Obpo can't solve all obfuscate problems, but I hope it can be a powerful option.
+2. Due to the limited server performance, the timeout is limited to 60s. If there is abuse or attack behavior, I will
+   close the service at any time.
 
-## 支持
+## Supported Version
 
-obpo-plugin 目前要求使用下列版本的 hex-rays 反编译器:
+obpo-plugin currently requires the following versions of hex-rays decompiler:
 
 | Hex-Rays Version | Arch                     | Tested |
 | ---------------- | ------------------------ | ------ |
@@ -25,26 +29,29 @@ obpo-plugin 目前要求使用下列版本的 hex-rays 反编译器:
 | 7.5.0.201028     | ARM, ARM64, X86, X86_64  | ✔️   |
 | 7.5.0.201028     | PowerPC, PowerPC64, MIPS | ❌️   |
 
-## 安装方法
+## Installation
 
-复制 `obpo_plugin.py` and `obpoplugin` 到 IDA 的 plugins 目录。
+Copy `obpo_plugin.py` and `obpoplugin` into ida plugins path.
 
-## 使用方法
+## Usages
 
-Obpo 需要手动标记控制流平坦化的分发块之后才能进行自动分析，分发块一般长这样：
+Obpo requires you to manually mark a dispatch block for Control Flow Flattening before automated analysis. Normally, the
+dispatch block looks like this:
 
 ![](./assets/dispatchblock.png)
 
-在控制流图上面右键，点击 `OBPO -> Mark and process function`。处理完成之后刷新反编译器，就像这样：
+Right-click on the control flow graph, click `OBPO -> Mark and process function`. Refresh the decompiler after
+processing is complete, like this:
 
 ![](./assets/demo.gif)
 
-根据反编译的变化可以继续标记分发块。
+Depending on the decompilation changes you can continue to mark dispatch blocks.
 
-## 样本
+## Samples
 
-[samples](samples) 目录中保存了自动测试生成的伪代码以及对比参考图。
+In the [samples](samples) directory, saved some pseudocode and compare image by automation testing.
 
-### 反馈
+### Feedback
 
-目前所有测试使用的样本都记录在 [obpo-project/samples](https://github.com/obpo-project/samples) 仓库，欢迎继续提交其他样本。
+All sample binaries are saved in [obpo-project/samples](https://github.com/obpo-project/samples). Welcome to submit
+other sample.
