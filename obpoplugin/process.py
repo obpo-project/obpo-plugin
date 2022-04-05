@@ -18,7 +18,7 @@ def generate_microcode(function: func_t, level=None):
     ml = mlist_t()
     mba = gen_microcode(mbr, hf, ml, DECOMP_WARNINGS, level)
     if not mba:
-        raise Exception("{} generate mc error:  {}".format(hex(function.start_ea) % hf.errea, hf.str))
+        raise Exception("{} generate mc error:  {}: {}".format(hex(function.start_ea), hex(hf.errea), hf.str))
     for i in range(mba.qty):
         mba.get_mblock(i).build_lists(True)
     clear_empty_blocks(mba)
