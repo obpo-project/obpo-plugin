@@ -1,6 +1,6 @@
 # Obfuscated Binary Pseudocode Optimizer
 
-[中文说明](https://mp.weixin.qq.com/s/ZA-Pt7WnEhGXlFSi5hJrcw)
+[中文说明](https://mp.weixin.qq.com/s/ZA-Pt7WnEhGXlFSi5hJrcw) | [在线交流 | Gitter Community](https://gitter.im/obpoplugin/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Obpo is a microcode-based hex-rays optimizer, uses techniques such as static-program-analysis, dataflow-tracking,
 concolic-execution to rebuild the obfuscated control flow (such as: OLLVM).
