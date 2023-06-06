@@ -1,9 +1,9 @@
 # Obfuscated Binary Pseudocode Optimizer
 
-[中文说明](https://mp.weixin.qq.com/s/ZA-Pt7WnEhGXlFSi5hJrcw) | [在线交流 | Gitter Community](https://gitter.im/obpoplugin/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[中文说明](https://mp.weixin.qq.com/s/ZA-Pt7WnEhGXlFSi5hJrcw)
 
 Obpo is a microcode-based hex-rays optimizer, uses techniques such as dataflow-tracking, program-slicing, 
-concolic-execution to rebuild the obfuscated control flow (such as: OLLVM).
+concolic-execution to rebuild the obfuscated control flow.
 
 ## obpo-plugin
 
@@ -14,20 +14,17 @@ the decompilation process.
 ### NOTE
 
 1. Obpo can't solve all obfuscate problems, but I hope it can be a powerful option.
-2. Due to the limited server performance, the timeout is limited to 60s. If there is abuse or attack behavior, I will
-   close the service at any time.
+2. Due to the limited server performance, the timeout is limited to 180s. Server is very small(2h2g and self-financing), please don't abuse it (e.g. multithreading, malicious attacks).
 
 ## Supported Version
 
 obpo-plugin currently requires the following versions of hex-rays decompiler:
 
-| Hex-Rays Version | Arch                     | Tested |
-| ---------------- | ------------------------ | ------ |
-| 7.7.0.220118     | ARM64, X86, X86_64       | ✔️   |
-| 7.6.0.210427     | ARM, ARM64, X86, X86_64  | ✔️   |
-| 7.6.0.210427     | PowerPC, PowerPC64, MIPS | ❌️   |
-| 7.5.0.201028     | ARM, ARM64, X86, X86_64  | ✔️   |
-| 7.5.0.201028     | PowerPC, PowerPC64, MIPS | ❌️   |
+| Hex-Rays Version | Arch                     |
+| ---------------- | ------------------------ |
+| 7.7.0.220118     | ARM64, X86, X86_64       |
+| 7.6.0.210427     | ARM, ARM64, X86, X86_64, PowerPC, PowerPC64, MIPS |
+| 7.5.0.201028     | ARM, ARM64, X86, X86_64, PowerPC, PowerPC64, MIPS |
 
 ## Installation
 
