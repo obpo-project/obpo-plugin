@@ -7,11 +7,17 @@ concolic-execution to rebuild the obfuscated control flow.
 
 ## obpo-plugin
 
-Obpo is not open source yet, but currently provides obpo-plugin for testing. obpo-plugin is a cloud plugin, the binary
+The core of obpo is not open source, but provided **FREE & OPEN SOURCE** obpo-plugin. obpo-plugin is a cloud plugin, the binary
 code of the target function will be sent to the obpo server for processing, and the response result will be applied to
-the decompilation process.
+the decompilation process. These all uploaded data and processes can be seen in the obpo-plugin's code.
 
-### NOTE
+## obpo-server
+
+About how to process uploaded data, I published the source code for [obpo-server](https://github.com/obpo-project/obpo-server). 
+This is a simple backend server written in golang, used to receive request and input to ida and uses obpo-core to deobfuscation, 
+finally returning data to obpo-plugin client.
+
+## NOTE
 
 1. Obpo can't solve all obfuscate problems, but I hope it can be a powerful option.
 2. Due to the limited server performance, the timeout is limited to 180s. Server is very small(2h2g and self-financing), please don't abuse it (e.g. multithreading, malicious attacks).
