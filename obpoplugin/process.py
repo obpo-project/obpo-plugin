@@ -166,7 +166,7 @@ def prepare_request(mba, dispatchers):
 def request_process(mba: mba_t, dispatchers):
     c_map = _backup_calls(mba)
     data = prepare_request(mba, dispatchers)
-    response = requests.post("{}/request".format(SERVER), data=data)
+    response = requests.post("{}/request".format(SERVER), data=data, timeout=250)
     response = response.json()
     if "warn" in response: print(response["warn"])
     if response["code"] != 0 or not response["data"]["mba"]:
