@@ -18,6 +18,18 @@ def get_block_start(ea):
     return ea
 
 
+def set_block_color(ea, color):
+    func = get_func(ea)
+    if not func:
+        return
+    c = FlowChart(func)
+    for block in c:
+        if block.start_ea <= ea < block.end_ea:
+            ni = node_info_t()
+            ni.bg_color = color
+            set_node_info(func.start_ea, block.id, ni, NIF_BG_COLOR)
+
+
 def visit_instructions(bb: mblock_t):
     if not bb or not bb.head:
         return []
