@@ -3,7 +3,7 @@
 # CreateTime: 2022/3/22
 from ida_hexrays import mba_t
 from ida_idaapi import BADADDR
-from obpoplugin.idahelper import get_func_start, get_block_start
+from obpoplugin.idahelper import get_func_start, get_block_start, set_block_color
 
 
 # Mark Manager
@@ -15,17 +15,25 @@ class MarkManager:
     def mark(self, ea):
         s = self.func_marked(ea)
         s.add(get_block_start(ea))
+        set_block_color(ea, 0x00ff00)
 
     def unmark(self, ea):
         s = self.func_marked(ea)
         ea = get_block_start(ea)
-        if ea in s: s.remove(ea)
+        if ea in s:
+            set_block_color(ea, 0xffffff)
+            s.remove(ea)
 
     def unmark_func(self, ea):
         s = self.func_marked(ea)
+        for ea in s:
+            set_block_color(ea, 0xffffff)
         s.clear()
 
     def clear(self):
+        for s in self.marked.values():
+            for ea in s:
+                set_block_color(ea, 0xffffff)
         self.marked.clear()
 
     def func_marked(self, ea):
